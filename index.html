@@ -1,0 +1,510 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Smart Grocery Demand Forecasting & Inventory Planner</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <!-- Login Page -->
+    <div class="login-page show" id="loginPage">
+        <div class="login-container">
+            <div class="login-form-section">
+                <h1>Welcome Back</h1>
+                <p>Smart Grocery Inventory Management System</p>
+
+                <div class="login-error" id="loginError"></div>
+
+                <form id="loginForm">
+                    <div class="login-form-group">
+                        <label>Email Address</label>
+                        <input type="email" id="loginEmail" placeholder="admin@grocery.com" required>
+                    </div>
+                    <div class="login-form-group">
+                        <label>Password</label>
+                        <input type="password" id="loginPassword" placeholder="••••••••" required>
+                    </div>
+
+                    <div class="remember-forgot">
+                        <label>
+                            <input type="checkbox" id="rememberMe"> Remember me
+                        </label>
+                        <a class="forgot-password" onclick="resetPassword()">Forgot password?</a>
+                    </div>
+
+                    <button type="submit" class="login-btn">Sign In</button>
+                </form>
+
+                <div class="demo-credentials">
+                    <strong>Demo Credentials:</strong><br>
+                    Email: admin@grocery.com<br>
+                    Password: admin123
+                </div>
+
+                <div class="signup-prompt">
+                    Don't have an account? <a onclick="showSignupPage()">Sign up here</a>
+                </div>
+            </div>
+
+            <div class="login-info-section">
+                <h2>🛒 Inventory Management Made Smart</h2>
+                <p>Optimize your grocery inventory with AI-powered demand forecasting and intelligent replenishment scheduling.</p>
+
+                <div class="feature-list">
+                    <div class="feature-item">Advanced Demand Forecasting</div>
+                    <div class="feature-item">Smart Replenishment Planning</div>
+                    <div class="feature-item">Waste Tracking & Analytics</div>
+                    <div class="feature-item">Real-time Alerts & Notifications</div>
+                    <div class="feature-item">Inventory Optimization</div>
+                    <div class="feature-item">Cost Reduction & Savings</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Signup Page -->
+    <div class="signup-page" id="signupPage">
+        <div class="signup-container">
+            <div class="signup-form-section">
+                <h1>Create Account</h1>
+                <p>Join our inventory management platform</p>
+
+                <div class="signup-error" id="signupError"></div>
+
+                <form id="signupForm">
+                    <div class="signup-form-group">
+                        <label>Full Name</label>
+                        <input type="text" id="signupName" placeholder="John Doe" required>
+                    </div>
+
+                    <div class="signup-form-group">
+                        <label>Email Address</label>
+                        <input type="email" id="signupEmail" placeholder="your@email.com" required>
+                    </div>
+
+                    <div class="signup-form-group">
+                        <label>Store Name</label>
+                        <input type="text" id="signupStore" placeholder="My Grocery Store" required>
+                    </div>
+
+                    <div class="signup-form-group">
+                        <label>Role</label>
+                        <select id="signupRole" required>
+                            <option value="">Select Your Role</option>
+                            <option value="Store Manager">Store Manager</option>
+                            <option value="Inventory Officer">Inventory Officer</option>
+                            <option value="Staff">Staff</option>
+                            <option value="Owner">Owner</option>
+                        </select>
+                    </div>
+
+                    <div class="signup-form-group">
+                        <label>Password</label>
+                        <input type="password" id="signupPassword" placeholder="••••••••" required oninput="updatePasswordRequirements()">
+                        <div class="password-requirements">
+                            <div class="requirement invalid" id="req-length">• At least 8 characters</div>
+                            <div class="requirement invalid" id="req-uppercase">• At least 1 uppercase letter</div>
+                            <div class="requirement invalid" id="req-number">• At least 1 number</div>
+                            <div class="requirement invalid" id="req-special">• At least 1 special character</div>
+                        </div>
+                    </div>
+
+                    <div class="signup-form-group">
+                        <label>Confirm Password</label>
+                        <input type="password" id="signupPasswordConfirm" placeholder="••••••••" required>
+                    </div>
+
+                    <div class="terms-checkbox">
+                        <input type="checkbox" id="agreeTerms" required>
+                        <label>I agree to the <a onclick="alert('Terms & Conditions')">Terms & Conditions</a> and <a onclick="alert('Privacy Policy')">Privacy Policy</a></label>
+                    </div>
+
+                    <button type="submit" class="signup-btn" id="signupBtn">Create Account</button>
+                </form>
+
+                <div class="signin-prompt">
+                    Already have an account? <a onclick="showLoginPage()">Sign in here</a>
+                </div>
+            </div>
+
+            <div class="signup-info-section">
+                <h2>Why Join Us?</h2>
+                <p>Get complete control over your grocery inventory with intelligent automation.</p>
+
+                <div class="signup-benefits">
+                    <div class="benefit-item">Smart demand forecasting with AI</div>
+                    <div class="benefit-item">Automated replenishment scheduling</div>
+                    <div class="benefit-item">Real-time inventory tracking</div>
+                    <div class="benefit-item">Waste reduction & cost savings</div>
+                    <div class="benefit-item">Comprehensive analytics & reports</div>
+                    <div class="benefit-item">24/7 system monitoring</div>
+                    <div class="benefit-item">Multi-user management</div>
+                    <div class="benefit-item">Mobile app integration</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Application -->
+    <div class="app-container" id="appContainer">
+        <div class="container">
+            <header>
+                <div style="display: flex; justify-content: space-between; align-items: center; width: 100%;">
+                    <div>
+                        <h1 style="margin: 0;">🛒 Smart Grocery Inventory Planner</h1>
+                        <p style="margin: 5px 0 0 0;">Demand Forecasting & Inventory Management System</p>
+                    </div>
+                    <div style="text-align: right;">
+                        <p style="margin: 0 0 10px 0; color: rgba(255,255,255,0.9);">Welcome, <strong id="userDisplay">User</strong>!</p>
+                        <button class="secondary" onclick="logout()" style="padding: 8px 15px; background: rgba(255,255,255,0.2); border: 1px solid rgba(255,255,255,0.3);">Logout</button>
+                    </div>
+                </div>
+            </header>
+
+            <div class="nav-tabs">
+                <button class="nav-tab active" data-tab="dashboard">📊 Dashboard</button>
+                <button class="nav-tab" data-tab="products">📦 Products</button>
+                <button class="nav-tab" data-tab="forecasting">🔮 Advanced Forecast</button>
+                <button class="nav-tab" data-tab="replenishment">🔄 Replenishment</button>
+                <button class="nav-tab" data-tab="waste">♻️ Waste Tracking</button>
+                <button class="nav-tab" data-tab="alerts">⚠️ Alerts</button>
+                <button class="nav-tab" data-tab="reports">📈 Analytics</button>
+            </div>
+
+        <div class="content">
+            <!-- Dashboard Tab -->
+            <div id="dashboard" class="tab-content active">
+                <h2 style="margin-bottom: 20px;">Dashboard</h2>
+                
+                <div class="cards-grid" id="dashboardCards">
+                    <div class="card">
+                        <h3>Total Products</h3>
+                        <div class="value" id="totalProducts">0</div>
+                    </div>
+                    <div class="card">
+                        <h3>Low Stock Items</h3>
+                        <div class="value card danger" id="lowStockCount" style="color: #dc3545;">0</div>
+                    </div>
+                    <div class="card">
+                        <h3>Total Inventory Value</h3>
+                        <div class="value" id="totalValue">Rs0</div>
+                    </div>
+                    <div class="card">
+                        <h3>Avg. Demand/Week</h3>
+                        <div class="value" id="avgDemand">0</div>
+                    </div>
+                </div>
+
+                <div class="two-column">
+                    <div>
+                        <h3 style="margin-bottom: 15px;">Inventory Levels</h3>
+                        <div class="chart-container">
+                            <canvas id="inventoryChart"></canvas>
+                        </div>
+                    </div>
+                    <div>
+                        <h3 style="margin-bottom: 15px;">Demand Trends</h3>
+                        <div class="chart-container">
+                            <canvas id="demandChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Products Tab -->
+            <div id="products" class="tab-content">
+                <h2 style="margin-bottom: 20px;">Product Management</h2>
+                
+                <button onclick="openAddProductModal()">➕ Add New Product</button>
+                
+                <div id="productsAlert" class="alert"></div>
+
+                <table id="productsTable">
+                    <thead>
+                        <tr>
+                            <th>Product Name</th>
+                            <th>Category</th>
+                            <th>Current Stock</th>
+                            <th>Min. Stock</th>
+                            <th>Unit Price</th>
+                            <th>Supplier</th>
+                            <th>Status</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="productsTableBody">
+                    </tbody>
+                </table>
+
+                <div id="emptyProducts" class="empty-state" style="display: none;">
+                    <div class="empty-state-icon">📭</div>
+                    <p>No products added yet. Click "Add New Product" to get started.</p>
+                </div>
+            </div>
+
+            <!-- Forecasting Tab -->
+            <div id="forecasting" class="tab-content">
+                <h2 style="margin-bottom: 20px;">🔮 Advanced Demand Forecasting</h2>
+                
+                <div style="background: #f0f0f0; padding: 20px; border-radius: 10px; margin-bottom: 25px;">
+                    <h3>Forecast Parameters</h3>
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; margin-top: 15px;">
+                        <div class="form-group">
+                            <label>Seasonal Factor</label>
+                            <select id="seasonalFactor">
+                                <option value="1">Normal (1.0x)</option>
+                                <option value="1.3">High Season (1.3x)</option>
+                                <option value="0.7">Low Season (0.7x)</option>
+                                <option value="1.5">Festival/Holiday (1.5x)</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Weather Impact</label>
+                            <select id="weatherFactor">
+                                <option value="1">Normal</option>
+                                <option value="1.2">Rainy (↑ 20%)</option>
+                                <option value="0.9">Sunny (↓ 10%)</option>
+                                <option value="1.4">Extreme Heat (↑ 40%)</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Forecast Period (weeks)</label>
+                            <input type="number" id="forecastWeeks" value="12" min="1" max="52">
+                        </div>
+                    </div>
+                </div>
+
+                <button onclick="generateAdvancedForecast()">🔮 Generate Advanced Forecast</button>
+                <button class="secondary" onclick="analyzeTrends()">📈 Analyze Trends</button>
+                
+                <div id="forecastingAlert" class="alert"></div>
+
+                <div id="forecastResults" style="margin-top: 30px;">
+                </div>
+
+                <div class="chart-container" style="margin-top: 30px;">
+                    <canvas id="forecastChart"></canvas>
+                </div>
+
+                <div style="margin-top: 30px; background: #f9f9f9; padding: 20px; border-radius: 10px;">
+                    <h3>📊 Demand Analysis by Category</h3>
+                    <div class="chart-container" style="margin-top: 15px;">
+                        <canvas id="categoryDemandChart"></canvas>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Replenishment Tab -->
+            <div id="replenishment" class="tab-content">
+                <h2 style="margin-bottom: 20px;">🔄 Smart Replenishment Schedule</h2>
+                
+                <button onclick="generateReplenishmentSchedule()">🔄 Generate Schedule</button>
+                <button class="secondary" onclick="exportReplenishmentPlan()">📥 Export Plan</button>
+                
+                <div id="replenishmentAlert" class="alert"></div>
+
+                <div id="replenishmentSchedule" style="margin-top: 20px;">
+                </div>
+
+                <div class="empty-state" style="display: none; margin-top: 40px;" id="emptyReplenishment">
+                    <div class="empty-state-icon">📋</div>
+                    <p>Generate a replenishment schedule to see recommendations.</p>
+                </div>
+            </div>
+
+            <!-- Waste Tracking Tab -->
+            <div id="waste" class="tab-content">
+                <h2 style="margin-bottom: 20px;">♻️ Waste & Expiry Management</h2>
+
+                <button onclick="openWasteModal()">➕ Log Waste</button>
+
+                <div id="wasteAlert" class="alert"></div>
+
+                <div class="cards-grid" style="margin: 20px 0;">
+                    <div class="card">
+                        <h3>Total Waste (units)</h3>
+                        <div class="value" id="totalWaste">0</div>
+                    </div>
+                    <div class="card danger">
+                        <h3>Waste Cost</h3>
+                        <div class="value" id="wasteCost">Rs0</div>
+                    </div>
+                    <div class="card">
+                        <h3>Waste Rate</h3>
+                        <div class="value" id="wasteRate">0%</div>
+                    </div>
+                    <div class="card success">
+                        <h3>Cost Saved</h3>
+                        <div class="value" id="costSaved">Rs0</div>
+                    </div>
+                </div>
+
+                <table id="wasteTable">
+                    <thead>
+                        <tr>
+                            <th>Product</th>
+                            <th>Quantity (units)</th>
+                            <th>Reason</th>
+                            <th>Date</th>
+                            <th>Cost Loss</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody id="wasteTableBody">
+                    </tbody>
+                </table>
+
+                <div class="empty-state" style="display: none; margin-top: 40px;" id="emptyWaste">
+                    <div class="empty-state-icon">✅</div>
+                    <p>No waste recorded. Great inventory management!</p>
+                </div>
+
+                <div class="chart-container" style="margin-top: 30px;">
+                    <canvas id="wasteChart"></canvas>
+                </div>
+            </div>
+
+            <!-- Alerts Tab -->
+            <div id="alerts" class="tab-content">
+                <h2 style="margin-bottom: 20px;">Inventory Alerts</h2>
+                
+                <div id="alertsList">
+                </div>
+
+                <div id="emptyAlerts" class="empty-state" style="display: none;">
+                    <div class="empty-state-icon">✅</div>
+                    <p>No active alerts. Great job keeping your inventory healthy!</p>
+                </div>
+            </div>
+
+            <!-- Reports Tab -->
+            <div id="reports" class="tab-content">
+                <h2 style="margin-bottom: 20px;">Reports & Analytics</h2>
+                
+                <div style="margin-bottom: 30px;">
+                    <h3>Inventory Summary</h3>
+                    <div class="cards-grid" style="margin-top: 15px;" id="reportCards">
+                    </div>
+                </div>
+
+                <div class="two-column">
+                    <div>
+                        <h3 style="margin-bottom: 15px;">Stock Distribution</h3>
+                        <div class="chart-container">
+                            <canvas id="stockDistributionChart"></canvas>
+                        </div>
+                    </div>
+                    <div>
+                        <h3 style="margin-bottom: 15px;">Category Analysis</h3>
+                        <div class="chart-container">
+                            <canvas id="categoryChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        </div>
+    </div>
+    </div>
+
+    <!-- Add Product Modal -->
+    <div id="addProductModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <span class="close-modal" onclick="closeAddProductModal()">&times;</span>
+                <h2>Add New Product</h2>
+            </div>
+            <form id="addProductForm">
+                <div class="form-group">
+                    <label>Product Name</label>
+                    <input type="text" id="productName" required>
+                </div>
+                <div class="form-group">
+                    <label>Category</label>
+                    <select id="productCategory" required>
+                        <option value="">Select Category</option>
+                        <option value="Fresh Produce">Fresh Produce</option>
+                        <option value="Dairy">Dairy</option>
+                        <option value="Meat & Seafood">Meat & Seafood</option>
+                        <option value="Bakery">Bakery</option>
+                        <option value="Beverages">Beverages</option>
+                        <option value="Snacks">Snacks</option>
+                        <option value="Pantry">Pantry</option>
+                        <option value="Frozen">Frozen</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Current Stock (units)</label>
+                    <input type="number" id="currentStock" required min="0">
+                </div>
+                <div class="form-group">
+                    <label>Minimum Stock Level</label>
+                    <input type="number" id="minStock" required min="0">
+                </div>
+                <div class="form-group">
+                    <label>Unit Price (Rs)</label>
+                    <input type="number" id="unitPrice" required min="0" step="0.01">
+                </div>
+                <div class="form-group">
+                    <label>Supplier Name</label>
+                    <input type="text" id="supplier" required>
+                </div>
+                <div class="form-group">
+                    <label>Average Weekly Demand</label>
+                    <input type="number" id="weeklyDemand" required min="0" step="0.1">
+                </div>
+                <div style="margin-top: 25px;">
+                    <button type="submit">✅ Add Product</button>
+                    <button type="button" class="secondary" onclick="closeAddProductModal()">Cancel</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Waste Logging Modal -->
+    <div id="wasteModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <span class="close-modal" onclick="closeWasteModal()">&times;</span>
+                <h2>Log Waste</h2>
+            </div>
+            <form id="wasteForm">
+                <div class="form-group">
+                    <label>Product</label>
+                    <select id="wasteProduct" required>
+                        <option value="">Select Product</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Quantity (units)</label>
+                    <input type="number" id="wasteQuantity" required min="1">
+                </div>
+                <div class="form-group">
+                    <label>Reason for Waste</label>
+                    <select id="wasteReason" required>
+                        <option value="">Select Reason</option>
+                        <option value="Expiry">Product Expired</option>
+                        <option value="Damage">Physical Damage</option>
+                        <option value="Unsold">Unsold Stock</option>
+                        <option value="Quality">Quality Issues</option>
+                        <option value="Spillage">Spillage/Breakage</option>
+                        <option value="Other">Other</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Date</label>
+                    <input type="date" id="wasteDate" required>
+                </div>
+                <div style="margin-top: 25px;">
+                    <button type="submit">✅ Log Waste</button>
+                    <button type="button" class="secondary" onclick="closeWasteModal()">Cancel</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
